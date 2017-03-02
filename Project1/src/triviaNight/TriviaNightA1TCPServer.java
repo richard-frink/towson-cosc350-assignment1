@@ -7,6 +7,10 @@ public class TriviaNightA1TCPServer {
 	public static void main(String argv[]) throws Exception {
 		String clientSentence;
 		String capitalizedSentence;
+
+		String clientServer = "www.towson.edu"; //client entered server
+		int clientPort = 80; //client entered port
+
 		ServerSocket welcomeSocket = new ServerSocket(6789);
 		while (true) {
 			Socket connectionSocket = welcomeSocket.accept();
