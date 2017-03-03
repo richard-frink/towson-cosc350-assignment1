@@ -14,6 +14,12 @@ public class TriviaNightA1TCPClient {
 		sentence = inFromUser.readLine();
 		System.out.println(sentence);
 
+		while(!checkInput(sentence))
+		{
+			System.out.print("Not in format required. Enter the server and port for the web server as follows 'server/port#' : ");
+			sentence = inFromUser.readLine();
+		}
+
 		Socket clientSocket = new Socket("localhost", 6789);
 
 		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
@@ -22,5 +28,13 @@ public class TriviaNightA1TCPClient {
 		modifiedSentence = inFromServer.readLine();
 		System.out.println("FROM SERVER: " + modifiedSentence);
 		clientSocket.close();
+	}
+
+	//checks if the user's sentence is in form server/port
+	private static boolean checkInput(String input)
+	{
+		int slash = input.indexOf('/');
+		if(slash == -1) return false;
+		else return true;
 	}
 }
