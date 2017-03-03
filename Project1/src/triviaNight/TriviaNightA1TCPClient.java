@@ -12,10 +12,8 @@ public class TriviaNightA1TCPClient {
 		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 		System.out.print("Enter in the server and port for the web server as follows 'server/port#' : ");
 		sentence = inFromUser.readLine();
-		System.out.println(sentence);
 
-		while(!checkInput(sentence))
-		{
+		while(!checkInput(sentence)) {
 			System.out.print("Not in format required. Enter the server and port for the web server as follows 'server/port#' : ");
 			sentence = inFromUser.readLine();
 		}
@@ -35,6 +33,17 @@ public class TriviaNightA1TCPClient {
 	{
 		int slash = input.indexOf('/');
 		if(slash == -1) return false;
-		else return true;
+		else if(slash == 0) return false;
+		else {
+            for(int i = 0; i < input.substring(0, slash).length(); i++){
+                if (!Character.isLetter(input.charAt(i)))
+                    if(input.charAt(i) != '.')
+                        return false;
+            }
+            for(int i = slash + 1; i < input.length(); i++){
+                if (!Character.isDigit(input.charAt(i))) return false;
+            }
+		    return true;
+        }
 	}
 }
