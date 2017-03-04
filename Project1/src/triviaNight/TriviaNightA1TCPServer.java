@@ -5,24 +5,24 @@ import java.net.*;
 
 public class TriviaNightA1TCPServer {
 	public static void main(String argv[]) throws Exception {
-		String clientSentence;
-		String textFromWeb = "Could not connect to provided server address.";
+        String clientSentence;
+        String textFromWeb = "Could not connect to provided server address.";
 
-		String clientWebServer = "www.towson.edu"; //client entered server // default value
-		int clientPort = 80; 					   //client entered port   // default value
+        String clientWebServer = "www.towson.edu"; //client entered server // default value
+        int clientPort = 80;                       //client entered port   // default value
 
-		ServerSocket welcomeSocket = new ServerSocket(6789);
-		while (true) {
-			Socket connectionSocket = welcomeSocket.accept();
-			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-			clientSentence = inFromClient.readLine();
+        ServerSocket welcomeSocket = new ServerSocket(6789);
+        while (true) {
+            Socket connectionSocket = welcomeSocket.accept();
+            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+            DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+            clientSentence = inFromClient.readLine();
 
-			//Separating client server and ports
-			clientWebServer = getWebServer(clientSentence);
-			clientPort = getWebPort(clientSentence);
+            //Separating client server and ports from given data
+            clientWebServer = getWebServer(clientSentence);
+            clientPort = getWebPort(clientSentence);
 
-			System.out.println("Received: " + clientSentence);
+            System.out.println("Received: " + clientSentence);
 
             //Creating websocket
             Socket clientWebSocket = new Socket(clientWebServer, clientPort);
@@ -37,20 +37,22 @@ public class TriviaNightA1TCPServer {
             BufferedReader inFromWeb = new BufferedReader(new InputStreamReader(clientWebSocket.getInputStream()));
             StringBuilder fromWeb = new StringBuilder();
             String line;
-            while((line = inFromWeb.readLine()) != null){
-                fromWeb.append(line + '\n');
+            while ((line = inFromWeb.readLine()) != null) {
+                fromWeb.append(line + "-_-_");
             }
             textFromWeb = fromWeb.toString();
 
+            //Prints all text from page
+            System.out.println("Printing all text received:\n\n" + textFromWeb + "\nText from web server is finished printing.");
+
+            //Closing socket from clientwebserver
             clientWebSocket.close();
 
-
-            textFromWeb = textFromWeb.toUpperCase() + '\n';
-
+            //Sending data out to clientS
             outToClient.writeBytes(textFromWeb);
-
-		}
-	}
+            connectionSocket.close();
+        }
+    }
 
     private static String getWebServer(String sentence){
         int slash = sentence.indexOf('/');

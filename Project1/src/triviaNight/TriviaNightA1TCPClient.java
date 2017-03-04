@@ -13,24 +13,35 @@ public class TriviaNightA1TCPClient {
 		System.out.print("Enter in the server and port for the web server as follows 'server/port#' : ");
 		sentence = inFromUser.readLine();
 
+		//Checking user input
 		while(!checkInput(sentence)) {
 			System.out.print("Not in format required. Enter the server and port for the web server as follows 'server/port#' : ");
 			sentence = inFromUser.readLine();
 		}
 
+		//Establishing connection to server
 		Socket clientSocket = new Socket("localhost", 6789);
 
+		//Creating out and in streams
 		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+		//Writing input to server
 		outToServer.writeBytes(sentence + '\n');
-		modifiedSentence = inFromServer.readLine();
-		System.out.println("FROM SERVER: " + modifiedSentence);
+
+		//Retrieving info from the server
+		String serverOutput = inFromServer.readLine();
+
+		//Putting retrieved info into the proper format
+		modifiedSentence = correctDataFromServer(serverOutput);
+
+		//Printing retrieved info
+		System.out.println("FROM SERVER:\n" + modifiedSentence);
 		clientSocket.close();
 	}
 
 	//checks if the user's sentence is in form server/port
-	private static boolean checkInput(String input)
-	{
+	private static boolean checkInput(String input) {
 		int slash = input.indexOf('/');
 		if(slash == -1) return false;
 		else if(slash == 0) return false;
@@ -45,5 +56,25 @@ public class TriviaNightA1TCPClient {
             }
 		    return true;
         }
+	}
+
+	//Reads through the server's output and makes the entered string correct (creates new lines from '-_-_')
+	private static String correctDataFromServer(String oldSentence) {
+		String editedSentence = "";
+		int tempIndex = 0;
+
+		for(int i = 0; i < oldSentence.length(); i++) {
+			if(oldSentence.charAt(i) == '-') {
+				if (i + 4 < oldSentence.length()) {
+					if(oldSentence.charAt(i+1) == '_' && oldSentence.charAt(i+2) == '-' && oldSentence.charAt(i+3) == '_') {
+						editedSentence += oldSentence.substring(tempIndex, i) + '\n';
+						tempIndex = i + 4;
+						i = i + 3;
+					}
+				}
+			}
+		}
+
+		return editedSentence;
 	}
 }
